@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Beauty Image Editor</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="css/select2.css" rel="stylesheet" type="text/css">
+    <link href="css/spectrum.css" rel="stylesheet" type="text/css">
+    <link href="css/ruler.css" rel="stylesheet" type="text/css">
+    <link href="css/toastr.css" rel="stylesheet" type="text/css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link id="palleon-theme-link" href="css/dark.css" rel="stylesheet" type="text/css">
+ </head>
+
+<body id="palleon" class="backend">
+    <!-- Page Loader START -->
+    <div id="palleon-main-loader" class="palleon-loader-wrap">
+        <div class="palleon-loader-inner">
+            <div class="palleon-loader"></div>
+        </div>
+    </div>
+    <!-- Page Loader END -->
+    <!-- Top Bar START -->
+    <div id="palleon-top-bar">
+        <!-- Logo -->
+        <div class="palleon-logo">
+            <h1>Beauty Image Editor</h1>
+        </div>
+        <!-- Menu -->
+        <div class="palleon-top-bar-menu">
+            <!-- New -->
+            <div class="palleon-new">
+                <button id="palleon-new" type="button" class="palleon-btn primary palleon-modal-open" autocomplete="off" data-target="#modal-add-new"><span class="material-icons">add_circle</span><span class="palleon-btn-text">New</span></button>
+            </div>
+            <!-- Save -->
+            <div class="palleon-save">
+                <button id="palleon-save" type="button" class="palleon-btn primary palleon-modal-open" autocomplete="off" data-target="#modal-save" disabled><span class="material-icons">save</span><span class="palleon-btn-text">Download Image</span></button>
+            </div>
+        </div>
+    </div>
+    <!-- Top Bar END -->
+    <!-- Icon Menu START -->
+    <div id="palleon-icon-menu">
+        <button id="palleon-btn-adjust" type="button" class="palleon-icon-menu-btn active" data-target="#palleon-adjust">
+            <span class="material-icons">tune</span><span class="palleon-icon-menu-title">Adjust</span>
+        </button>
+        <button id="palleon-btn-text" type="button" class="palleon-icon-menu-btn" data-target="#palleon-text">
+            <span class="material-icons">title</span><span class="palleon-icon-menu-title">Text</span>
+        </button>
+        <button id="palleon-btn-image" type="button" class="palleon-icon-menu-btn" data-target="#palleon-image">
+            <span class="material-icons">add_photo_alternate</span><span class="palleon-icon-menu-title">Image</span>
+        </button>
+        <button id="palleon-btn-shapes" type="button" class="palleon-icon-menu-btn" data-target="#palleon-shapes">
+            <span class="material-icons">category</span><span class="palleon-icon-menu-title">Shapes</span>
+        </button>
+        <button id="palleon-btn-draw" type="button" class="palleon-icon-menu-btn" data-target="#palleon-draw">
+            <span class="material-icons">brush</span><span class="palleon-icon-menu-title">Brushes</span>
+        </button>
+        <button id="palleon-btn-settings" type="button" class="palleon-icon-menu-btn stick-to-bottom" data-target="#palleon-settings">
+            <span class="material-icons">settings</span><span class="palleon-icon-menu-title">Settings</span>
+        </button>
+    </div>
+    <!-- Icon Menu END -->
+    <!-- Icon Panel START -->
+    <div id="palleon-icon-panel">
+        <div id="palleon-icon-panel-inner">
+            <!-- Adjust START -->
+            <div id="palleon-adjust" class="palleon-icon-panel-content">
+                <ul class="palleon-accordion">
+                    <!-- Crop -->
+                    <li class="accordion-crop hide-on-canvas-mode">
+                        <a href="#"><span class="material-icons accordion-icon">crop</span>Crop<span class="material-icons arrow">keyboard_arrow_down</span></a>
+                        <div>
+                            <div class="palleon-control-wrap label-block">
+                                <div class="palleon-control">
+                                    <select id="palleon-crop-style" class="palleon-select palleon-select2" autocomplete="off">
+                                        <option value="">Please select</option>
+                                        <option value="freeform" data-icon="crop_free">Freeform</option>
+                                        <option value="custom" data-icon="crop">Custom</option>
+                                        <option value="square" data-icon="crop_square">Square</option>
+                                        <option value="original" data-icon="crop_original">Original Ratio</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap palleon-resize-wrap crop-custom">
+                                <input id="palleon-crop-width" class="palleon-form-field" type="number" value="" data-max="" autocomplete="off">
+                                <span class="material-icons">clear</span>
+                                <input id="palleon-crop-height" class="palleon-form-field" type="number" value="" data-max="" autocomplete="off">
+                                <button id="palleon-crop-lock" type="button" class="palleon-btn palleon-lock-unlock hide-on-canvas-mode active"><span class="material-icons">lock</span></button>
+                            </div>
+                            <div id="palleon-crop-btns" class="palleon-control-wrap palleon-submit-btns disabled">
+                                <button id="palleon-crop-apply" type="button" class="palleon-btn primary">Apply</button>
+                                <button id="palleon-crop-cancel" type="button" class="palleon-btn">Cancel</button>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- Rotate -->
+                    <li>
+                        <a href="#"><span class="material-icons accordion-icon">refresh</span>Rotate<span class="material-icons arrow">keyboard_arrow_down</span></a>
+                        <div>
+                            <div class="palleon-control-wrap label-block">
+                                <div class="palleon-control">
+                                    <div class="palleon-btn-group icon-group">
+                                        <button id="palleon-rotate-right" type="button" class="palleon-btn tooltip" data-title="Rotate Right"><span class="material-icons">rotate_right</span></button>
+                                        <button id="palleon-rotate-left" type="button" class="palleon-btn tooltip" data-title="Rotate Left"><span class="material-icons">rotate_left</span></button>
+                                        <button id="palleon-flip-horizontal" type="button" class="palleon-btn tooltip" data-title="Flip X"><span class="material-icons">flip</span></button>
+                                        <button id="palleon-flip-vertical" type="button" class="palleon-btn tooltip" data-title="Flip Y"><span class="material-icons">flip</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- Resize -->
+                    <li>
+                        <a href="#"><span class="material-icons accordion-icon">aspect_ratio</span>Resize<span class="material-icons arrow">keyboard_arrow_down</span></a>
+                        <div>
+                            <div class="palleon-resize-wrap">
+                                <input id="palleon-resize-width" class="palleon-form-field" type="number" value="" data-size="" autocomplete="off">
+                                <span class="material-icons">clear</span>
+                                <input id="palleon-resize-height" class="palleon-form-field" type="number" value="" data-size="" autocomplete="off">
+                                <button id="palleon-resize-lock" type="button" class="palleon-btn palleon-lock-unlock active"><span class="material-icons">lock</span></button>
+                            </div>
+                            <button id="palleon-resize-apply" type="button" class="palleon-btn btn-full primary">Apply</button>
+                        </div>
+                    </li>
+                </ul>
+                <hr class="hide-on-canvas-mode" />
+                <ul class="palleon-accordion hide-on-canvas-mode">
+                    <!-- Quick Filters -->
+                    <li>
+                        <a href="#"><span class="material-icons accordion-icon">auto_fix_high</span>Quick Filters<span class="material-icons arrow">keyboard_arrow_down</span></a>
+                        <div>
+                            <div id="palleon-filters" class="palleon-grid two-column">
+                                <div class="grid-item" data-keyword="Blog Banner - 2240x1260px" data-category="blog-banners">
+                                    <input type="checkbox" name="palleon-filter" id="grayscale" autocomplete="off" class="input-hidden" />
+                                    <label for="grayscale"><span>Grayscale</span></label>
+                                </div><br>
+                                <div class="grid-item" data-keyword="Blog Banner - 2240x1260px" data-category="blog-banners">
+                                    <input type="checkbox" name="palleon-filter" id="sepia" autocomplete="off" class="input-hidden" />
+                                    <label for="sepia"><span>Sepia</span></label>
+                                </div><br>
+                                <div class="grid-item" data-keyword="Blog Banner - 2240x1260px" data-category="blog-banners">
+                                    <input type="checkbox" name="palleon-filter" id="blackwhite" autocomplete="off" class="input-hidden" />
+                                    <label for="blackwhite"><span>Black/White</span></label>
+                                </div><br>
+                                <div class="grid-item" data-keyword="Blog Banner - 2240x1260px" data-category="blog-banners">
+                                    <input type="checkbox" name="palleon-filter" id="brownie" autocomplete="off" class="input-hidden" />
+                                    <label for="brownie"><span>Brownie</span></label>
+                                </div><br>
+                                <div class="grid-item" data-keyword="Blog Banner - 2240x1260px" data-category="blog-banners">
+                                    <input type="checkbox" name="palleon-filter" id="vintage" autocomplete="off" class="input-hidden" />
+                                    <label for="vintage"><span>Vintage</span></label>
+                                </div><br>
+                                <div class="grid-item" data-keyword="Blog Banner - 2240x1260px" data-category="blog-banners">
+                                    <input type="checkbox" name="palleon-filter" id="kodachrome" autocomplete="off" class="input-hidden" />
+                                    <label for="kodachrome"><span>Kodachrome</span></label>
+                                </div><br>
+                                <div class="grid-item" data-keyword="Blog Banner - 2240x1260px" data-category="blog-banners">
+                                    <input type="checkbox" name="palleon-filter" id="technicolor" autocomplete="off" class="input-hidden" />
+                                    <label for="technicolor"><span>Technicolor</span></label>
+                                </div><br>
+                                <div class="grid-item" data-keyword="Blog Banner - 2240x1260px" data-category="blog-banners">
+                                    <input type="checkbox" name="palleon-filter" id="polaroid" autocomplete="off" class="input-hidden" />
+                                    <label for="polaroid"><span>Polaroid</span></label>
+                                </div><br>
+                                <div class="grid-item" data-keyword="Blog Banner - 2240x1260px" data-category="blog-banners">
+                                    <input type="checkbox" name="palleon-filter" id="shift" autocomplete="off" class="input-hidden" />
+                                    <label for="shift"><span>Shift</span></label>
+                                </div><br>
+                                <div class="grid-item" data-keyword="Blog Banner - 2240x1260px" data-category="blog-banners">
+                                    <input type="checkbox" name="palleon-filter" id="invert" autocomplete="off" class="input-hidden" />
+                                    <label for="invert"><span>Invert</span></label>
+                                </div><br>
+                                <div class="grid-item" data-keyword="Blog Banner - 2240x1260px" data-category="blog-banners">
+                                    <input type="checkbox" name="palleon-filter" id="sharpen" autocomplete="off" class="input-hidden" />
+                                    <label for="sharpen"><span>Sharpen</span></label>
+                                </div><br>
+                                <div class="grid-item" data-keyword="Blog Banner - 2240x1260px" data-category="blog-banners">
+                                    <input type="checkbox" name="palleon-filter" id="emboss" autocomplete="off" class="input-hidden" />
+                                    <label for="emboss"><span>Emboss</span></label>
+                                </div><br>
+                                <div class="grid-item" data-keyword="Blog Banner - 2240x1260px" data-category="blog-banners">
+                                    <input type="checkbox" name="palleon-filter" id="sobelX" autocomplete="off" class="input-hidden" />
+                                    <label for="sobelX"><span>SobelX</span></label>
+                                </div><br>
+                                <div class="grid-item" data-keyword="Blog Banner - 2240x1260px" data-category="blog-banners">
+                                    <input type="checkbox" name="palleon-filter" id="sobelY" autocomplete="off" class="input-hidden" />
+                                    <label for="sobelY"><span>SobelY</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- Basic Adjust -->
+                    <li>
+                        <a href="#"><span class="material-icons accordion-icon">tune</span>Basic Adjust<span class="material-icons arrow">keyboard_arrow_down</span></a>
+                        <div>
+                            <div class="palleon-control-wrap conditional">
+                                <label class="palleon-control-label">Adjust Brightness</label>
+                                <div class="palleon-control palleon-toggle-control">
+                                    <label class="palleon-toggle">
+                                        <input id="palleon-brightness" class="palleon-toggle-checkbox" data-conditional="#palleon-brightness-settings" type="checkbox" autocomplete="off" />
+                                        <div class="palleon-toggle-switch"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="palleon-brightness-settings" class="d-none conditional-settings">
+                                <div class="palleon-control-wrap label-block">
+                                    <label class="palleon-control-label slider-label">Brightness<span>0</span></label>
+                                    <div class="palleon-control">
+                                        <input id="brightness" type="range" min="-1" max="1" value="0" step="0.01" class="palleon-slider" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap conditional">
+                                <label class="palleon-control-label">Adjust Contrast</label>
+                                <div class="palleon-control palleon-toggle-control">
+                                    <label class="palleon-toggle">
+                                        <input id="palleon-contrast" class="palleon-toggle-checkbox" data-conditional="#palleon-contrast-settings" type="checkbox" autocomplete="off" />
+                                        <div class="palleon-toggle-switch"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="palleon-contrast-settings" class="d-none conditional-settings">
+                                <div class="palleon-control-wrap label-block">
+                                    <label class="palleon-control-label slider-label">Contrast<span>0</span></label>
+                                    <div class="palleon-control">
+                                        <input id="contrast" type="range" min="-1" max="1" value="0" step="0.01" class="palleon-slider" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap conditional">
+                                <label class="palleon-control-label">Adjust Saturation</label>
+                                <div class="palleon-control palleon-toggle-control">
+                                    <label class="palleon-toggle">
+                                        <input id="palleon-saturation" class="palleon-toggle-checkbox" data-conditional="#palleon-saturation-settings" type="checkbox" autocomplete="off" />
+                                        <div class="palleon-toggle-switch"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="palleon-saturation-settings" class="d-none conditional-settings">
+                                <div class="palleon-control-wrap label-block">
+                                    <label class="palleon-control-label slider-label">Saturation<span>0</span></label>
+                                    <div class="palleon-control">
+                                        <input id="saturation" type="range" min="-1" max="1" value="0" step="0.01" class="palleon-slider" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap conditional">
+                                <label class="palleon-control-label">Adjust Hue</label>
+                                <div class="palleon-control palleon-toggle-control">
+                                    <label class="palleon-toggle">
+                                        <input id="palleon-hue" class="palleon-toggle-checkbox" data-conditional="#palleon-hue-settings" type="checkbox" autocomplete="off" />
+                                        <div class="palleon-toggle-switch"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="palleon-hue-settings" class="d-none conditional-settings">
+                                <div class="palleon-control-wrap label-block">
+                                    <label class="palleon-control-label slider-label">Hue<span>0</span></label>
+                                    <div class="palleon-control">
+                                        <input id="hue" type="range" min="-2" max="2" value="0" step="0.02" class="palleon-slider" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- Gamma -->
+                    <li>
+                        <a href="#"><span class="material-icons accordion-icon">wb_sunny</span>Gamma<span class="material-icons arrow">keyboard_arrow_down</span></a>
+                        <div>
+                            <div class="palleon-control-wrap conditional">
+                                <label class="palleon-control-label">Adjust Gamma</label>
+                                <div class="palleon-control palleon-toggle-control">
+                                    <label class="palleon-toggle">
+                                        <input id="palleon-gamma" class="palleon-toggle-checkbox" data-conditional="#palleon-gamma-settings" type="checkbox" autocomplete="off" />
+                                        <div class="palleon-toggle-switch"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="palleon-gamma-settings" class="d-none conditional-settings">
+                                <div class="palleon-control-wrap label-block">
+                                    <label class="palleon-control-label slider-label">Red<span>1</span></label>
+                                    <div class="palleon-control">
+                                        <input id="gamma-red" type="range" min="0.2" max="2.2" value="1" step="0.01" class="palleon-slider" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="palleon-control-wrap label-block">
+                                    <label class="palleon-control-label slider-label">Green<span>1</span></label>
+                                    <div class="palleon-control">
+                                        <input id="gamma-green" type="range" min="0.2" max="2.2" value="1" step="0.01" class="palleon-slider" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="palleon-control-wrap label-block">
+                                    <label class="palleon-control-label slider-label">Blue<span>1</span></label>
+                                    <div class="palleon-control">
+                                        <input id="gamma-blue" type="range" min="0.2" max="2.2" value="1" step="0.01" class="palleon-slider" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- Blend Color -->
+                    <li>
+                        <a href="#"><span class="material-icons accordion-icon">palette</span>Blend Color<span class="material-icons arrow">keyboard_arrow_down</span></a>
+                        <div>
+                            <div class="palleon-control-wrap conditional">
+                                <label class="palleon-control-label">Blend Color</label>
+                                <div class="palleon-control palleon-toggle-control">
+                                    <label class="palleon-toggle">
+                                        <input id="palleon-blend-color" class="palleon-toggle-checkbox" data-conditional="#palleon-blend-color-settings" type="checkbox" autocomplete="off" />
+                                        <div class="palleon-toggle-switch"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="palleon-blend-color-settings" class="d-none conditional-settings">
+                                <div class="palleon-control-wrap">
+                                    <label class="palleon-control-label">Mode</label>
+                                    <div class="palleon-control">
+                                        <select id="blend-color-mode" class="palleon-select" autocomplete="off">
+                                            <option selected value="add">Add</option>
+                                            <option value="diff">Diff</option>
+                                            <option value="subtract">Subtract</option>
+                                            <option value="multiply">Multiply</option>
+                                            <option value="screen">Screen</option>
+                                            <option value="lighten">Lighten</option>
+                                            <option value="darken">Darken</option>
+                                            <option value="overlay">Overlay</option>
+                                            <option value="exclusion">Exclusion</option>
+                                            <option value="tint">Tint</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="palleon-control-wrap">
+                                    <label class="palleon-control-label">Color</label>
+                                    <div class="palleon-control">
+                                        <input id="blend-color-color" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="#ffffff" />
+                                    </div>
+                                </div>
+                                <div class="palleon-control-wrap label-block">
+                                    <label class="palleon-control-label slider-label">Alpha<span>0.5</span></label>
+                                    <div class="palleon-control">
+                                        <input id="blend-color-alpha" type="range" min="0" max="1" value="0.5" step="0.01" class="palleon-slider" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- Duotone Effect -->
+                    <li>
+                        <a href="#"><span class="material-icons accordion-icon">swap_horiz</span>Duotone Effect<span class="material-icons arrow">keyboard_arrow_down</span></a>
+                        <div>
+                            <div class="palleon-control-wrap conditional">
+                                <label class="palleon-control-label">Adjust Duotone</label>
+                                <div class="palleon-control palleon-toggle-control">
+                                    <label class="palleon-toggle">
+                                        <input id="palleon-duotone-color" class="palleon-toggle-checkbox" data-conditional="#palleon-duotone-settings" type="checkbox" autocomplete="off" />
+                                        <div class="palleon-toggle-switch"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="palleon-duotone-settings" class="d-none conditional-settings">
+                                <div class="palleon-control-wrap">
+                                    <label class="palleon-control-label">Light Color</label>
+                                    <div class="palleon-control">
+                                        <input id="duotone-light-color" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="green" />
+                                    </div>
+                                </div>
+                                <div class="palleon-control-wrap">
+                                    <label class="palleon-control-label">Dark Color</label>
+                                    <div class="palleon-control">
+                                        <input id="duotone-dark-color" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="blue" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- Swap Colors -->
+                    <li>
+                        <a href="#"><span class="material-icons accordion-icon">swap_horiz</span>Swap Colors<span
+                                class="material-icons arrow">keyboard_arrow_down</span></a>
+                        <div>
+                            <div class="palleon-control-wrap conditional">
+                                <label class="palleon-control-label">Swap Colors</label>
+                                <div class="palleon-control palleon-toggle-control">
+                                    <label class="palleon-toggle">
+                                        <input id="palleon-swap-colors" class="palleon-toggle-checkbox" data-conditional="#palleon-swap-colors-settings" type="checkbox" autocomplete="off" />
+                                        <div class="palleon-toggle-switch"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="palleon-swap-colors-settings" class="d-none conditional-settings">
+                                <div class="palleon-control-wrap control-text-color">
+                                    <label class="palleon-control-label">Source</label>
+                                    <div class="palleon-control">
+                                        <input id="color-source" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="#ffffff" />
+                                    </div>
+                                </div>
+                                <div class="palleon-control-wrap control-text-color">
+                                    <label class="palleon-control-label">Destination</label>
+                                    <div class="palleon-control">
+                                        <input id="color-destination" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="#000000" />
+                                    </div>
+                                </div>
+                                <div class="palleon-control-wrap label-block">
+                                    <div class="palleon-control">
+                                        <div class="palleon-btn-set">
+                                            <button id="palleon-swap-apply" type="button" class="palleon-btn primary">Apply</button>
+                                            <button id="palleon-swap-remove" type="button" class="palleon-btn" autocomplete="off" disabled><span class="material-icons">delete</span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- Advanced Edits -->
+                    <li>
+                        <a href="#"><span class="material-icons accordion-icon">tune</span>Advanced Edits<span
+                                class="material-icons arrow">keyboard_arrow_down</span></a>
+                        <div>
+                            <div class="palleon-control-wrap conditional">
+                                <label class="palleon-control-label">Adjust Blur</label>
+                                <div class="palleon-control palleon-toggle-control">
+                                    <label class="palleon-toggle">
+                                        <input id="palleon-blur" class="palleon-toggle-checkbox" data-conditional="#palleon-blur-settings" type="checkbox" autocomplete="off" />
+                                        <div class="palleon-toggle-switch"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="palleon-blur-settings" class="d-none conditional-settings">
+                                <div class="palleon-control-wrap label-block">
+                                    <label class="palleon-control-label slider-label">Blur<span>0</span></label>
+                                    <div class="palleon-control">
+                                        <input id="blur" type="range" min="0" max="1" value="0" step="0.01" class="palleon-slider" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap conditional">
+                                <label class="palleon-control-label">Adjust Noise</label>
+                                <div class="palleon-control palleon-toggle-control">
+                                    <label class="palleon-toggle">
+                                        <input id="palleon-noise" class="palleon-toggle-checkbox" data-conditional="#palleon-noise-settings" type="checkbox" autocomplete="off" />
+                                        <div class="palleon-toggle-switch"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="palleon-noise-settings" class="d-none conditional-settings">
+                                <div class="palleon-control-wrap label-block">
+                                    <label class="palleon-control-label slider-label">Noise<span>0</span></label>
+                                    <div class="palleon-control">
+                                        <input id="noise" type="range" min="0" max="1000" value="0" step="1" class="palleon-slider" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap conditional">
+                                <label class="palleon-control-label">Adjust Pixelate</label>
+                                <div class="palleon-control palleon-toggle-control">
+                                    <label class="palleon-toggle">
+                                        <input id="palleon-pixelate" class="palleon-toggle-checkbox" data-conditional="#palleon-pixelate-settings" type="checkbox" autocomplete="off" />
+                                        <div class="palleon-toggle-switch"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="palleon-pixelate-settings" class="d-none conditional-settings">
+                                <div class="palleon-control-wrap label-block">
+                                    <label class="palleon-control-label slider-label">Pixelate<span>1</span></label>
+                                    <div class="palleon-control">
+                                        <input id="pixelate" type="range" min="1" max="20" value="1" step="1" class="palleon-slider" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- Adjust END -->
+            <!-- Text START -->
+            <div id="palleon-text" class="palleon-icon-panel-content panel-hide">
+                <!-- Add Text Button -->
+                <button id="palleon-add-text" type="button" class="palleon-btn primary palleon-lg-btn btn-full"><span class="material-icons">add_circle</span>Add Text</button>
+                <!-- Text Settings -->
+                <div id="palleon-text-settings" class="palleon-sub-settings">
+                    <div class="palleon-text-wrap">
+                        <div class="palleon-control-wrap label-block">
+                            <div class="palleon-control">
+                                <div id="palleon-text-format-btns" class="palleon-btn-group icon-group">
+                                    <button id="format-uppercase" type="button" class="palleon-btn"><span class="material-icons">text_fields</span></button>
+                                    <button id="format-bold" type="button" class="palleon-btn"><span class="material-icons">format_bold</span></button>
+                                    <button id="format-italic" type="button" class="palleon-btn"><span class="material-icons">format_italic</span></button>
+                                    <button id="format-underlined" type="button" class="palleon-btn"><span class="material-icons">format_underlined</span></button>
+                                    <button id="format-align-left" type="button" class="palleon-btn format-align"><span class="material-icons">format_align_left</span></button>
+                                    <button id="format-align-center" type="button" class="palleon-btn format-align"><span class="material-icons">format_align_center</span></button>
+                                    <button id="format-align-right" type="button" class="palleon-btn format-align"><span class="material-icons">format_align_right</span></button>
+                                    <button id="format-align-justify" type="button" class="palleon-btn format-align"><span class="material-icons">format_align_justify</span></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap label-block">
+                            <div class="palleon-control">
+                                <textarea id="palleon-text-input" class="palleon-form-field" rows="2" autocomplete="off">Enter Your Text Here</textarea>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="palleon-control-wrap label-block">
+                            <label class="palleon-control-label">Font Family</label>
+                            <div class="palleon-control">
+                                <select id="palleon-font-family" class="palleon-select palleon-select2" autocomplete="off" data-loadFont="yes">
+                                    <optgroup id="websafe-fonts" label="Default Fonts"></optgroup>
+                                    <optgroup id="google-fonts" label="Google Fonts"></optgroup>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap">
+                            <label class="palleon-control-label">Font Size</label>
+                            <div class="palleon-control">
+                                <input id="palleon-font-size" class="palleon-form-field" type="number" value="60" data-min="1" data-max="1000" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap">
+                            <label class="palleon-control-label">Line Height</label>
+                            <div class="palleon-control">
+                                <input id="palleon-line-height" class="palleon-form-field" type="number" value="1.2" data-min="0.1" data-max="10" step="0.1" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap">
+                            <label class="palleon-control-label">Letter Spacing</label>
+                            <div class="palleon-control">
+                                <input id="palleon-letter-spacing" class="palleon-form-field" type="number" value="0" data-max="1000" step="100" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap">
+                            <label class="palleon-control-label">Fill Style</label>
+                            <div class="palleon-control">
+                                <select id="palleon-text-gradient" class="palleon-select" autocomplete="off">
+                                    <option value="none" selected>Solid Color</option>
+                                    <option value="vertical">Vertical Gradient</option>
+                                    <option value="horizontal">Horizontal Gradient</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="text-gradient-settings">
+                            <div class="palleon-control-wrap control-text-color">
+                                <label class="palleon-control-label">Color 1</label>
+                                <div class="palleon-control">
+                                    <input id="text-gradient-color-1" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="#9C27B0" />
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap control-text-color">
+                                <label class="palleon-control-label">Color 2</label>
+                                <div class="palleon-control">
+                                    <input id="text-gradient-color-2" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="#000000" />
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap control-text-color">
+                                <label class="palleon-control-label">Color 3</label>
+                                <div class="palleon-control">
+                                    <input id="text-gradient-color-3" type="text" class="palleon-colorpicker allow-empty" autocomplete="off" value="" />
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap control-text-color">
+                                <label class="palleon-control-label">Color 4</label>
+                                <div class="palleon-control">
+                                    <input id="text-gradient-color-4" type="text" class="palleon-colorpicker allow-empty" autocomplete="off" value="" />
+                                </div>
+                            </div>
+                        </div>
+                        <div id="text-fill-color" class="palleon-control-wrap">
+                            <label class="palleon-control-label">Color</label>
+                            <div class="palleon-control">
+                                <input id="palleon-text-color" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="#000" />
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap">
+                            <label class="palleon-control-label">Outline Size</label>
+                            <div class="palleon-control">
+                                <input id="palleon-outline-size" class="palleon-form-field" type="number" value="0" data-min="0" data-max="100" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap">
+                            <label class="palleon-control-label">Outline Color</label>
+                            <div class="palleon-control">
+                                <input id="palleon-outline-color" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="#fff" />
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap">
+                            <label class="palleon-control-label">Background</label>
+                            <div class="palleon-control">
+                                <input id="palleon-text-background" type="text" class="palleon-colorpicker allow-empty" autocomplete="off" value="" />
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap conditional">
+                            <label class="palleon-control-label">Text Shadow</label>
+                            <div class="palleon-control palleon-toggle-control">
+                                <label class="palleon-toggle">
+                                    <input id="palleon-text-shadow" class="palleon-toggle-checkbox" data-conditional="#text-shadow-settings" type="checkbox" autocomplete="off" />
+                                    <div class="palleon-toggle-switch"></div>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="text-shadow-settings" class="d-none conditional-settings">
+                            <div class="palleon-control-wrap">
+                                <label class="palleon-control-label">Shadow Color</label>
+                                <div class="palleon-control">
+                                    <input id="text-shadow-color" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="#000" />
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap">
+                                <label class="palleon-control-label">Shadow Blur</label>
+                                <div class="palleon-control">
+                                    <input id="text-shadow-blur" class="palleon-form-field" type="number" value="5" data-min="0" data-max="1000" step="1" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap">
+                                <label class="palleon-control-label">Offset X</label>
+                                <div class="palleon-control">
+                                    <input id="text-shadow-offset-x" class="palleon-form-field" type="number" value="5" data-min="0" data-max="1000" step="1" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap">
+                                <label class="palleon-control-label">Offset Y</label>
+                                <div class="palleon-control">
+                                    <input id="text-shadow-offset-y" class="palleon-form-field" type="number" value="5" data-min="0" data-max="1000" step="1" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="palleon-control-wrap label-block">
+                            <div class="palleon-control">
+                                <div id="palleon-text-flip-btns" class="palleon-btn-group icon-group">
+                                    <button id="text-flip-x" type="button" class="palleon-btn tooltip tooltip-top" data-title="Flip X"><span class="material-icons">flip</span></button>
+                                    <button id="text-flip-y" type="button" class="palleon-btn tooltip tooltip-top" data-title="Flip Y"><span class="material-icons">flip</span></button>
+                                    <button type="button" class="palleon-horizontal-center palleon-btn tooltip tooltip-top" data-title="H-Align Center"><span class="material-icons">align_horizontal_center</span></button>
+                                    <button type="button" class="palleon-vertical-center palleon-btn tooltip tooltip-top" data-title="V-Align Center"><span class="material-icons">vertical_align_center</span></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap label-block">
+                            <label class="palleon-control-label slider-label">Opacity<span>1</span></label>
+                            <div class="palleon-control">
+                                <input id="text-opacity" type="range" min="0" max="1" value="1" step="0.1" class="palleon-slider" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap label-block">
+                            <label class="palleon-control-label slider-label">Skew X<span>0</span></label>
+                            <div class="palleon-control">
+                                <input id="text-skew-x" type="range" min="0" max="180" value="0" step="1" class="palleon-slider" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap label-block">
+                            <label class="palleon-control-label slider-label">Skew Y<span>0</span></label>
+                            <div class="palleon-control">
+                                <input id="text-skew-y" type="range" min="0" max="180" value="0" step="1" class="palleon-slider" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap label-block">
+                            <label class="palleon-control-label slider-label">Rotate<span>0</span></label>
+                            <div class="palleon-control">
+                                <input id="text-rotate" type="range" min="0" max="360" value="0" step="1" class="palleon-slider" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Text END -->
+            <!-- Image START -->
+            <div id="palleon-image" class="palleon-icon-panel-content panel-hide">
+                <div class="palleon-tabs">
+                    <ul class="palleon-tabs-menu">
+                        <li id="palleon-img-mode" class="active" data-target="#palleon-image-mode">Image</li>
+                        <li data-target="#palleon-overlay-image-mode">Overlay Image</li>
+                    </ul>
+                    <div id="palleon-image-mode" class="palleon-tab active">
+                        <!-- Upload Image Button -->
+                        <div class="palleon-file-field">
+                            <input type="file" name="palleon-file" id="palleon-img-upload" class="palleon-hidden-file" accept="image/png, image/jpeg, image/webp" />
+                            <label for="palleon-img-upload" class="palleon-btn primary palleon-lg-btn btn-full"><span class="material-icons">upload</span><span>Upload from computer</span></label>
+                        </div>
+                        <!-- Media Library Button -->
+                        <button id="palleon-img-media-library" type="button" class="palleon-btn primary palleon-lg-btn btn-full palleon-modal-open" data-target="#modal-media-library"><span class="material-icons">photo_library</span>Select From Media Library</button>
+                        <!-- Image Settings -->
+                        <div id="palleon-image-settings" class="palleon-sub-settings">
+                            <div class="palleon-control-wrap">
+                                <label class="palleon-control-label">Border Width</label>
+                                <div class="palleon-control">
+                                    <input id="img-border-width" class="palleon-form-field" type="number" value="0" data-min="0" data-max="1000" step="1" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap">
+                                <label class="palleon-control-label">Border Color</label>
+                                <div class="palleon-control">
+                                    <input id="img-border-color" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="#ffffff" />
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap label-block">
+                                <label class="palleon-control-label slider-label">Rounded Corners<span>0</span></label>
+                                <div class="palleon-control">
+                                    <input id="img-border-radius" type="range" min="0" max="1000" value="0" step="1" class="palleon-slider" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap conditional">
+                                <label class="palleon-control-label">Shadow</label>
+                                <div class="palleon-control palleon-toggle-control">
+                                    <label class="palleon-toggle">
+                                        <input id="palleon-image-shadow" class="palleon-toggle-checkbox" data-conditional="#image-shadow-settings" type="checkbox" autocomplete="off" />
+                                        <div class="palleon-toggle-switch"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="image-shadow-settings" class="d-none conditional-settings">
+                                <div class="palleon-control-wrap">
+                                    <label class="palleon-control-label">Shadow Color</label>
+                                    <div class="palleon-control">
+                                        <input id="image-shadow-color" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="#000" />
+                                    </div>
+                                </div>
+                                <div class="palleon-control-wrap">
+                                    <label class="palleon-control-label">Shadow Blur</label>
+                                    <div class="palleon-control">
+                                        <input id="image-shadow-blur" class="palleon-form-field" type="number" value="5" step="1" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="palleon-control-wrap">
+                                    <label class="palleon-control-label">Offset X</label>
+                                    <div class="palleon-control">
+                                        <input id="image-shadow-offset-x" class="palleon-form-field" type="number" value="5" step="1" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="palleon-control-wrap">
+                                    <label class="palleon-control-label">Offset Y</label>
+                                    <div class="palleon-control">
+                                        <input id="image-shadow-offset-y" class="palleon-form-field" type="number" value="5" step="1" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="palleon-control-wrap label-block">
+                                <div class="palleon-control">
+                                    <div class="palleon-btn-group icon-group">
+                                        <button id="img-flip-horizontal" type="button" class="palleon-btn tooltip tooltip-top" data-title="Flip X"><span class="material-icons">flip</span></button>
+                                        <button id="img-flip-vertical" type="button" class="palleon-btn tooltip tooltip-top" data-title="Flip Y"><span class="material-icons">flip</span></button>
+                                        <button type="button" class="palleon-horizontal-center palleon-btn tooltip tooltip-top" data-title="H-Align Center"><span class="material-icons">align_horizontal_center</span></button>
+                                        <button type="button" class="palleon-vertical-center palleon-btn tooltip tooltip-top" data-title="V-Align Center"><span class="material-icons">vertical_align_center</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap label-block">
+                                <label class="palleon-control-label slider-label">Opacity<span>1</span></label>
+                                <div class="palleon-control">
+                                    <input id="img-opacity" type="range" min="0" max="1" value="1" step="0.1" class="palleon-slider" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap label-block">
+                                <label class="palleon-control-label slider-label">Skew X<span>0</span></label>
+                                <div class="palleon-control">
+                                    <input id="img-skew-x" type="range" min="0" max="180" value="0" step="1" class="palleon-slider" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap label-block">
+                                <label class="palleon-control-label slider-label">Skew Y<span>0</span></label>
+                                <div class="palleon-control">
+                                    <input id="img-skew-y" type="range" min="0" max="180" value="0" step="1" class="palleon-slider" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap label-block">
+                                <label class="palleon-control-label slider-label">Rotate<span>0</span></label>
+                                <div class="palleon-control">
+                                    <input id="img-rotate" type="range" min="0" max="360" value="0" step="1" class="palleon-slider" autocomplete="off">
+                                </div>
+                            </div>
+                            <hr />
+                            <button id="palleon-img-replace-media-library" type="button" class="palleon-btn palleon-lg-btn btn-full palleon-modal-open" data-target="#modal-media-library"><span class="material-icons">photo_library</span>Replace Image
+                            </button>
+                        </div>
+                    </div>
+                    <div id="palleon-overlay-image-mode" class="palleon-tab">
+                        <div class="palleon-file-field">
+                            <input type="file" name="palleon-file" id="palleon-overlay-img-upload" class="palleon-hidden-file" accept="image/png, image/jpeg, image/webp" />
+                            <label for="palleon-overlay-img-upload" class="palleon-btn primary palleon-lg-btn btn-full"><span class="material-icons">upload</span><span>Upload from computer</span></label>
+                        </div>
+                        <button id="palleon-overlay-img-media-library" type="button" class="palleon-btn primary palleon-lg-btn btn-full palleon-modal-open" data-target="#modal-media-library"><span class="material-icons">photo_library</span>Select From Media Library</button>
+                        <div class="notice notice-warning">It is useful only if your PNG image has transparent parts and the size of the image (or the aspect ratio) is equal to the canvas. The overlay image will over all objects on the canvas and will be stretched to fit the canvas.</div>
+                        <div id="palleon-overlay-wrap">
+                            <img id="palleon-overlay-preview" src="" />
+                            <button id="palleon-overlay-delete" type="button" class="palleon-btn palleon-lg-btn btn-full"><span class="material-icons">delete</span>Remove Overlay Image</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Image END -->
+            <!-- Shapes START -->
+            <div id="palleon-shapes" class="palleon-icon-panel-content panel-hide">
+                <!-- Select Shape -->
+                <div class="palleon-select-btn-set">
+                    <select id="palleon-shape-select" class="palleon-select" autocomplete="off">
+                        <option value="none" selected>Select Shape</option>
+                        <option value="circle">Circle</option>
+                        <option value="ellipse">Ellipse</option>
+                        <option value="square">Square</option>
+                        <option value="rectangle">Rectangle</option>
+                        <option value="triangle">Triangle</option>
+                        <option value="trapezoid">Trapezoid</option>
+                        <option value="pentagon">Pentagon</option>
+                        <option value="octagon">Octagon</option>
+                        <option value="emerald">Emerald</option>
+                        <option value="star">Star</option>
+                    </select>
+                    <button id="palleon-shape-add" class="palleon-btn primary" autocomplete="off" disabled><span class="material-icons">add_circle</span></button>
+                </div>
+                <!-- Shape Settings -->
+                <div id="palleon-shape-settings" class="palleon-sub-settings">
+                    <div class="palleon-control-wrap">
+                        <label class="palleon-control-label">Fill Style</label>
+                        <div class="palleon-control">
+                            <select id="palleon-shape-gradient" class="palleon-select" autocomplete="off">
+                                <option value="none" selected>Solid Color</option>
+                                <option value="vertical">Vertical Gradient</option>
+                                <option value="horizontal">Horizontal Gradient</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="shape-gradient-settings">
+                        <div class="palleon-control-wrap control-text-color">
+                            <label class="palleon-control-label">Color 1</label>
+                            <div class="palleon-control">
+                                <input id="shape-gradient-color-1" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="#9C27B0" />
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap control-text-color">
+                            <label class="palleon-control-label">Color 2</label>
+                            <div class="palleon-control">
+                                <input id="shape-gradient-color-2" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="#000000" />
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap control-text-color">
+                            <label class="palleon-control-label">Color 3</label>
+                            <div class="palleon-control">
+                                <input id="shape-gradient-color-3" type="text" class="palleon-colorpicker allow-empty" autocomplete="off" value="" />
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap control-text-color">
+                            <label class="palleon-control-label">Color 4</label>
+                            <div class="palleon-control">
+                                <input id="shape-gradient-color-4" type="text" class="palleon-colorpicker allow-empty" autocomplete="off" value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="shape-fill-color" class="palleon-control-wrap">
+                        <label class="palleon-control-label">Fill Color</label>
+                        <div class="palleon-control">
+                            <input id="palleon-shape-color" type="text" class="palleon-colorpicker allow-empty" autocomplete="off" value="#fff" />
+                        </div>
+                    </div>
+                    <div class="palleon-control-wrap">
+                        <label class="palleon-control-label">Outline Size</label>
+                        <div class="palleon-control">
+                            <input id="shape-outline-width" class="palleon-form-field" type="number" value="0" data-min="0" data-max="1000" step="1" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="palleon-control-wrap">
+                        <label class="palleon-control-label">Outline Color</label>
+                        <div class="palleon-control">
+                            <input id="shape-outline-color" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="#000000" />
+                        </div>
+                    </div>
+                    <div class="palleon-control-wrap conditional">
+                        <label class="palleon-control-label">Shadow</label>
+                        <div class="palleon-control palleon-toggle-control">
+                            <label class="palleon-toggle">
+                                <input id="palleon-shape-shadow" class="palleon-toggle-checkbox" data-conditional="#shape-shadow-settings" type="checkbox" autocomplete="off" />
+                                <div class="palleon-toggle-switch"></div>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="shape-shadow-settings" class="d-none conditional-settings">
+                        <div class="palleon-control-wrap">
+                            <label class="palleon-control-label">Shadow Color</label>
+                            <div class="palleon-control">
+                                <input id="shape-shadow-color" type="text" class="palleon-colorpicker disallow-empty" autocomplete="off" value="#000" />
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap">
+                            <label class="palleon-control-label">Shadow Blur</label>
+                            <div class="palleon-control">
+                                <input id="shape-shadow-blur" class="palleon-form-field" type="number" value="5" step="1" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap">
+                            <label class="palleon-control-label">Offset X</label>
+                            <div class="palleon-control">
+                                <input id="shape-shadow-offset-x" class="palleon-form-field" type="number" value="5" step="1" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap">
+                            <label class="palleon-control-label">Offset Y</label>
+                            <div class="palleon-control">
+                                <input id="shape-shadow-offset-y" class="palleon-form-field" type="number" value="5" step="1" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="palleon-control-wrap label-block">
+                        <div class="palleon-control">
+                            <div class="palleon-btn-group icon-group">
+                                <button type="button" class="palleon-horizontal-center palleon-btn tooltip tooltip-top" data-title="Horizontal Align Center"><span class="material-icons">align_horizontal_center</span></button>
+                                <button type="button" class="palleon-vertical-center palleon-btn tooltip tooltip-top" data-title="Vertical Align Center"><span class="material-icons">vertical_align_center</span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="palleon-control-wrap label-block">
+                        <label class="palleon-control-label slider-label">Opacity<span>1</span></label>
+                        <div class="palleon-control">
+                            <input id="shape-opacity" type="range" min="0" max="1" value="1" step="0.1" class="palleon-slider" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="palleon-control-wrap label-block">
+                        <label class="palleon-control-label slider-label">Skew X<span>0</span></label>
+                        <div class="palleon-control">
+                            <input id="shape-skew-x" type="range" min="0" max="180" value="0" step="1" class="palleon-slider" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="palleon-control-wrap label-block">
+                        <label class="palleon-control-label slider-label">Skew Y<span>0</span></label>
+                        <div class="palleon-control">
+                            <input id="shape-skew-y" type="range" min="0" max="180" value="0" step="1" class="palleon-slider" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="palleon-control-wrap label-block">
+                        <label class="palleon-control-label slider-label">Rotate<span>0</span></label>
+                        <div class="palleon-control">
+                            <input id="shape-rotate" type="range" min="0" max="360" value="0" step="1" class="palleon-slider" autocomplete="off">
+                        </div>
+                    </div>
+                    <div id="shape-custom-width-wrap">
+                        <div class="palleon-control-wrap">
+                            <label class="palleon-control-label">Custom Width</label>
+                            <div class="palleon-control">
+                                <input id="shape-custom-width" class="palleon-form-field" type="number" value="" data-min="0" data-max="10000" step="1" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap">
+                            <label class="palleon-control-label">Custom Height</label>
+                            <div class="palleon-control">
+                                <input id="shape-custom-height" class="palleon-form-field" type="number" value="" data-min="0" data-max="10000" step="1" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap label-block">
+                            <label class="palleon-control-label">Aspect Ratio</label>
+                            <div class="palleon-control">
+                                <div class="palleon-aspect-ratio">
+                                    <input id="palleon-shape-ratio-w" class="palleon-form-field" type="number" value="12" autocomplete="off">
+                                    <span class="material-icons">clear</span>
+                                    <input id="palleon-shape-ratio-h" class="palleon-form-field" type="number" value="16" autocomplete="off">
+                                    <button id="palleon-shape-ratio-lock" type="button" class="palleon-btn palleon-lock-unlock"><span class="material-icons">lock_open</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Shapes END -->
+            <!-- Drawing START -->
+            <div id="palleon-draw" class="palleon-icon-panel-content panel-hide">
+                <!-- Start Drawing Button -->
+                <div class="palleon-btn-set">
+                    <button id="palleon-draw-btn" type="button" class="palleon-btn primary palleon-lg-btn"><span class="material-icons">edit</span>Start Drawing</button>
+                    <button id="palleon-draw-undo" type="button" class="palleon-btn palleon-lg-btn" autocomplete="off" title="Undo" disabled><span class="material-icons">undo</span></button>
+                </div>
+                <!-- Drawing Setings -->
+                <div id="palleon-draw-settings" class="palleon-sub-settings">
+                    <div id="palleon-brush-tip" class="notice notice-info">
+                        You can draw a straight line by pressing the shift key.
+                    </div>
+                    <div id="palleon-eraser-tip" class="notice notice-info">
+                        You can click undo button to activate invert erasing mode.
+                    </div>
+                    <div class="palleon-control-wrap">
+                        <label class="palleon-control-label">Brush Type</label>
+                        <div class="palleon-control">
+                            <select id="palleon-brush-select" class="palleon-select" autocomplete="off">
+                                <option value="pencil" selected>Pencil</option>
+                                <option value="circle">Circle</option>
+                                <option value="spray">Spray</option>
+                                <option value="hline">H-line Pattern</option>
+                                <option value="vline">V-line Pattern</option>
+                                <option value="square">Square Pattern</option>
+                                <option value="erase">Erase BG Image</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="palleon-control-wrap">
+                        <label class="palleon-control-label">Brush Width</label>
+                        <div class="palleon-control">
+                            <input id="brush-width" class="palleon-form-field numeric-field" type="number" value="50" autocomplete="off" data-min="1" data-max="1000" data-step="1">
+                        </div>
+                    </div>
+                    <div id="palleon-brush-pattern-width" class="palleon-control-wrap">
+                        <label class="palleon-control-label">Pattern Width</label>
+                        <div class="palleon-control">
+                            <input id="brush-pattern-width" class="palleon-form-field numeric-field" type="number" value="10" autocomplete="off" data-min="1" data-max="1000" data-step="1">
+                        </div>
+                    </div>
+                    <div id="palleon-brush-pattern-distance" class="palleon-control-wrap">
+                        <label class="palleon-control-label">Pattern Distance</label>
+                        <div class="palleon-control">
+                            <input id="brush-pattern-distance" class="palleon-form-field numeric-field" type="number" value="5" autocomplete="off" data-min="1" data-max="1000" data-step="1">
+                        </div>
+                    </div>
+                    <div id="not-erase-brush">
+                        <div class="palleon-control-wrap control-text-color">
+                            <label class="palleon-control-label">Brush Color</label>
+                            <div class="palleon-control">
+                                <input id="brush-color" type="text" class="palleon-colorpicker allow-empty" autocomplete="off" value="#ffffff" />
+                            </div>
+                        </div>
+                        <div class="palleon-control-wrap conditional">
+                            <label class="palleon-control-label">Brush Shadow</label>
+                            <div class="palleon-control palleon-toggle-control">
+                                <label class="palleon-toggle">
+                                    <input id="palleon-brush-shadow" class="palleon-toggle-checkbox" data-conditional="#line-shadow-settings" type="checkbox" autocomplete="off" />
+                                    <div class="palleon-toggle-switch"></div>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="line-shadow-settings" class="d-none conditional-settings">
+                            <div class="palleon-control-wrap">
+                                <label class="palleon-control-label">Blur</label>
+                                <div class="palleon-control">
+                                    <input id="brush-shadow-width" class="palleon-form-field" type="number" value="5" data-min="0" data-max="1000" step="1" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap">
+                                <label class="palleon-control-label">Offset X</label>
+                                <div class="palleon-control">
+                                    <input id="brush-shadow-shadow-offset-x" class="palleon-form-field" type="number" value="5" data-min="0" data-max="100" step="1" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap">
+                                <label class="palleon-control-label">Offset Y</label>
+                                <div class="palleon-control">
+                                    <input id="brush-shadow-shadow-offset-y" class="palleon-form-field" type="number" value="5" data-min="0" data-max="100" step="1" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="palleon-control-wrap control-text-color">
+                                <label class="palleon-control-label">Color</label>
+                                <div class="palleon-control">
+                                    <input id="brush-shadow-color" type="text" class="palleon-colorpicker allow-empty" autocomplete="off" value="#000000" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Drawing END -->
+            <!-- Settings START -->
+            <div id="palleon-settings" class="palleon-icon-panel-content panel-hide">
+                <hr />
+                <h5>Preferences</h5>
+                <div id="palleon-preferences">
+                    <div class="palleon-control-wrap label-block">
+                        <label class="palleon-control-label slider-label">Font Size<span>14</span></label>
+                        <div class="palleon-control">
+                            <input id="custom-font-size" type="range" min="10" max="18" value="14" step="1" class="palleon-slider preference" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="palleon-control-wrap control-text-color">
+                        <label class="palleon-control-label">Background</label>
+                        <div class="palleon-control">
+                            <input id="custom-background" type="text" class="palleon-colorpicker allow-empty preference" autocomplete="off" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="palleon-control-wrap label-block">
+                    <div class="palleon-control">
+                        <button id="palleon-preferences-save" type="button" class="palleon-btn palleon-lg-btn btn-full primary">Save Preferences</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Settings END -->
+        </div>
+    </div>
+    <!-- Toggle Left -->
+    <div id="palleon-toggle-left"><span class="material-icons">chevron_left</span></div>
+    <!-- Icon Panel END -->
+    <!-- Body START -->
+    <div id="palleon-body">
+        <div class="palleon-wrap">
+            <div id="palleon-ruler" class="palleon-inner-wrap">
+                <!-- Canvas Content START -->
+                <div id="palleon-content" class="">
+                    <!-- Canvas Image -->
+                    <div id="palleon-canvas-img-wrap">
+                        <img id="palleon-canvas-img" src="" data-filename="" data-template="" />
+                    </div>
+                    <div id="palleon-canvas-wrap">
+                        <!-- Canvas Loader -->
+                        <div id="palleon-canvas-overlay"></div>
+                        <div id="palleon-canvas-loader">
+                            <div class="palleon-loader"></div>
+                        </div>
+                        <!-- Canvas - Don't remove canvas element! -->
+                        <canvas id="palleon-canvas"></canvas>
+                    </div>
+                    <!-- Zoom & Pan Buttons -->
+                    <div class="palleon-content-bar">
+                        <div class="palleon-img-size"><span id="palleon-img-width">0</span>px<span class="material-icons">clear</span><span id="palleon-img-height">0</span>px</div>
+                        <button id="palleon-img-drag" class="palleon-btn"><span class="material-icons">pan_tool</span></button>
+                        <div id="palleon-img-zoom-counter" class="palleon-counter">
+                            <button id="palleon-img-zoom-out" class="counter-minus palleon-btn"><span class="material-icons">remove</span></button>
+                            <input id="palleon-img-zoom" class="palleon-form-field numeric-field" type="text" value="100" autocomplete="off" data-min="10" data-max="500" data-step="5">
+                            <button id="palleon-img-zoom-in" class="counter-plus palleon-btn"><span class="material-icons">add</span></button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Canvas Content END -->
+            </div>
+        </div>
+    </div>
+    <!-- Body END -->
+
+    <!-- Modal Add New START -->
+    <div id="modal-add-new" class="palleon-modal">
+        <div class="palleon-modal-close" data-target="#modal-add-new"><span class="material-icons">close</span></div>
+        <div class="palleon-modal-wrap">
+            <div class="palleon-modal-inner large">
+                <div class="palleon-tabs">
+                    <!-- Menu -->
+                    <ul class="palleon-tabs-menu">
+                        <li class="active" data-target="#modal-select-img"><span class="material-icons">file_upload</span>New Image</li>
+                        </ul>
+                    <!-- New Image -->
+                    <div id="modal-select-img" class="palleon-tab active">
+                        <div class="palleon-select-btn-block">
+                            <div>
+                                <div class="palleon-btn-set">
+                                    <div class="palleon-file-field">
+                                        <input type="file" name="palleon-image-upload" id="palleon-image-upload" class="palleon-hidden-file" accept="image/png, image/jpeg, image/webp" />
+                                        <label for="palleon-image-upload" class="palleon-btn primary palleon-lg-btn"><span class="material-icons">upload</span><span>Upload Image</span></label>
+                                    </div>
+                                 </div>
+                            </div>
+                            <div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Template Library -->
+                    <!-- Blank Canvas -->
+                    <div id="modal-blank-canvas" class="palleon-tab">
+                        <div class="palleon-control-group">
+                            <div>
+                                <label>Size</label>
+                                <select id="palleon-canvas-size-select" class="palleon-select" autocomplete="off">
+                                    <option selected value="custom" data-width="800" data-height="800">Custom</option>
+                                    <option value="" data-width="2240" data-height="1260">Blog Banner</option>
+                                    <option value="" data-width="851" data-height="315">Facebook Cover</option>
+                                    <option value="" data-width="1200" data-height="628">Facebook Ad</option>
+                                    <option value="" data-width="1080" data-height="1080">Instagram Post</option>
+                                    <option value="" data-width="750" data-height="1120">Pinterest Post</option>
+                                    <option value="" data-width="940" data-height="788">Facebook Post</option>
+                                    <option value="" data-width="1600" data-height="900">Twitter Post</option>
+                                    <option value="" data-width="1280" data-height="720">Youtube Thumbnail</option>
+                                    <option value="" data-width="1920" data-height="1080">Wallpaper</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Width</label>
+                                <input id="palleon-canvas-width" class="palleon-form-field" type="number" value="800" data-min="1" data-max="10000" autocomplete="off">
+                            </div>
+                            <div>
+                                <label>Height</label>
+                                <input id="palleon-canvas-height" class="palleon-form-field" type="number" value="800" data-min="1" data-max="10000" autocomplete="off">
+                            </div>
+                            <div>
+                                <label>Background</label>
+                                <input id="palleon-canvas-color" type="text" class="palleon-colorpicker allow-empty" autocomplete="off" value="" />
+                            </div>
+                            <div>
+                                <button id="palleon-canvas-create" type="button" class="palleon-btn primary"><span class="material-icons">done</span>Create</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Add New END -->
+    <!-- Modal Save START -->
+    <div id="modal-save" class="palleon-modal">
+        <div class="palleon-modal-close" data-target="#modal-save"><span class="material-icons">close</span></div>
+        <div class="palleon-modal-wrap">
+            <div class="palleon-modal-inner">
+                <div class="palleon-tabs">
+                    <!-- Menu -->
+                    <ul class="palleon-tabs-menu">
+                        <li class="active" data-target="#modal-tab-save"><span class="material-icons">save</span>Save
+                        </li>
+                        <!-- <li data-target="#modal-tab-download"><span class="material-icons">download</span>Download</li> -->
+                    </ul>
+                    <!-- Save File -->
+                    <div id="modal-tab-save" class="palleon-tab active">
+                        <div id="palleon-save-as-img">
+                            <div class="palleon-block-50">
+                                <div>
+                                    <label>File Name</label>
+                                    <input id="palleon-save-img-name" class="palleon-form-field palleon-file-name" type="text" value="" autocomplete="off" data-default="">
+                                </div>
+                                <button id="palleon-save-img" type="button" class="palleon-btn primary"><span class="material-icons">save</span>Save As Image</button>
+                            </div>
+                                    <label>File Format</label>
+                                    <select id="palleon-save-img-format" class="palleon-select" autocomplete="off">
+                                        <option selected value="jpeg">JPEG</option>
+                                        <option value="png">PNG</option>
+                                        <option value="svg">SVG</option>
+                                        <option value="webp">WEBP</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+    <!-- Scripts -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/fabric.min.js"></script>
+    <script src="js/plugins.min.js"></script>
+    <script src="js/palleon.min.js"></script>
+    <!-- Canvas Ruler -->
+    <script type="text/javascript">
+        if (document.body.clientWidth >= 1200) {
+            var evt = new Event('palleon-ruler'),
+                dragdrop = new Dragdrop(evt),
+                rg = new RulersGuides(evt, dragdrop, document.getElementById("palleon-ruler"));
+        }
+    </script>
+    <script src="js/custom.js"></script>
+    <!-- Translation Strings -->
+    <script>
+        /* <![CDATA[ */
+        var palleonParams = {
+            "textbox": "Enter Your Text Here",
+            "object": "Object",
+            "loading": "Loading...",
+            "loadmore": "Load More",
+            "saved": "Saved!",
+            "imgsaved": "Image is saved.",
+            "tempsaved": "Template is saved.",
+            "freeDrawing": "Free drawing",
+            "frame": "Frame",
+            "image": "Image",
+            "circle": "Circle",
+            "square": "Square",
+            "rectangle": "Rectangle",
+            "triangle": "Triangle",
+            "ellipse": "Ellipse",
+            "trapezoid": "Trapezoid",
+            "pentagon": "Pentagon",
+            "octagon": "Octagon",
+            "emerald": "Emerald",
+            "star": "Star",
+            "element": "Element",
+            "customSvg": "Custom SVG",
+            "success": "Success",
+            "error": "Error",
+            "delete": "Delete",
+            "duplicate": "Duplicate",
+            "showhide": "Show/Hide",
+            "lockunlock": "Lock/Unlock",
+            "text": "Text",
+            "started": "Editing started.",
+            "added": "added.",
+            "removed": "removed.",
+            "resized": "resized.",
+            "edited": "edited.",
+            "replaced": "replaced.",
+            "rotated": "rotated.",
+            "moved": "moved.",
+            "scaled": "scaled.",
+            "flipped": "flipped.",
+            "cropped": "cropped.",
+            "bg": "Canvas",
+            "filter": "filter",
+            "showRulers": "Show rulers",
+            "hideRulers": "Hide rulers",
+            "showGuides": "Show guides",
+            "hideGuides": "Hide guides",
+            "clearAllGuides": "Clear all guides",
+            "question1": "Are you sure you want clear the history?",
+            "question2": "Are you sure you want to delete the layers?",
+            "question3": "Are you sure you want to crop the image?",
+            "question4": "Are you sure you want to resize the image?",
+            "noDuplicate": "You can not duplicate multiple objects. Please select single object to duplicate.",
+            "warning": "Warning",
+            "qrCode": "QR Code",
+            "startDrawing": "Start Drawing",
+            "stopDrawing": "Stop Drawing",
+            "erased": "Pixels erased."
+        };
+        /* ]]> */
+    </script>
+    <!-- Scripts END -->
+</body>
+<!-- Body END -->
+
+</html>
